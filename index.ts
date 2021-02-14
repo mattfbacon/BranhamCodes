@@ -45,6 +45,8 @@ const exit_handler = async () => {
 	const app = express();
 	app.use(http_logger);
 
+	if (config.DEBUG) { app.use(express.static('web/dist/static')); }
+
 	app.listen(config.PORT, () => logger.info('listening on %d', config.PORT));
 })().catch((reason) => {
 	throw reason;
