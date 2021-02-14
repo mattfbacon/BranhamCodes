@@ -14,9 +14,19 @@ import config from './lib/config';
 const DB_URL = 'mongodb://localhost:27017';
 const DB_NAME = 'branhamcodes';
 
-(async() => {
-	let _conn: mongo.MongoClient;
+let _conn: mongo.MongoClient;
 
+const exit_handler = async () => {
+	if (typeof _conn === 'undefined') {
+		logger.debug('shut down before MongoDB was started');
+	} else {
+		logger.info('shutting down MongoDB');
+		await _conn.close();
+	}
+	process.exit(); // eslint-disable-line no-process-exit -- inside a promise so can't throw
+};
+
+(async () => {
 	try {
 		_conn = new mongo.MongoClient(DB_URL);
 		await _conn.connect();
@@ -28,8 +38,13 @@ const DB_NAME = 'branhamcodes';
 
 		app.listen(config.PORT, () => logger.info('listening on %d', config.PORT));
 	} catch (e) {
-		logger.info('shutting down MongoDB');
-		await _conn.close();
-		process.exit(); // eslint-disable-line no-process-exit -- inside a promise so can't throw
+		process.exit(); // eslint-disable-line no-process-exit -- uses our exit handler.
 	}
 })();
+
+process.on('SIGINT', () => process.exit()); // eslint-disable-line no-process-exit -- uses our exit handler.
+process.on('uncaughtException', (e) => {
+	logger.fatal(e);
+	process.exit(); // eslint-disable-line no-process-exit -- uses our exit handler.
+});
+process.on('exit', exit_handler);
