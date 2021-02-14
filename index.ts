@@ -17,34 +17,43 @@ const DB_NAME = 'branhamcodes';
 let _conn: mongo.MongoClient;
 
 const exit_handler = async () => {
-	if (typeof _conn === 'undefined') {
+	if (typeof _conn === 'undefined' || !_conn.isConnected()) {
 		logger.debug('shut down before MongoDB was started');
 	} else {
-		logger.info('shutting down MongoDB');
+		logger.debug('closing MongoDB connection...');
 		await _conn.close();
+		logger.info('closed MongoDB connection');
 	}
-	process.exit(); // eslint-disable-line no-process-exit -- inside a promise so can't throw
 };
 
 (async () => {
+	_conn = new mongo.MongoClient(DB_URL);
 	try {
-		_conn = new mongo.MongoClient(DB_URL);
 		await _conn.connect();
-		const _database = _conn.db(DB_NAME).collection('users');
-		const database = new DBManager(_database);
-
-		const app = express();
-		app.use(http_logger);
-
-		app.listen(config.PORT, () => logger.info('listening on %d', config.PORT));
 	} catch (e) {
-		process.exit(); // eslint-disable-line no-process-exit -- uses our exit handler.
+		if (e instanceof mongo.MongoNetworkError) {
+			logger.fatal('Could not connect to MongoDB. Is the server running?');
+			await exit_handler();
+			process.exit(1); // eslint-disable-line no-process-exit -- nothing to clean up and don't want to give an exception for something simple.
+		} else {
+			throw e;
+		}
 	}
-})();
+	const _database = _conn.db(DB_NAME).collection('users');
+	const database = new DBManager(_database);
 
-process.on('SIGINT', () => process.exit()); // eslint-disable-line no-process-exit -- uses our exit handler.
+	const app = express();
+	app.use(http_logger);
+
+	app.listen(config.PORT, () => logger.info('listening on %d', config.PORT));
+})().catch((reason) => {
+	throw reason;
+});
+
+process.on('SIGINT', () => {
+	exit_handler().then(() => process.exit(0));
+});
 process.on('uncaughtException', (e) => {
 	logger.fatal(e);
-	process.exit(); // eslint-disable-line no-process-exit -- uses our exit handler.
+	exit_handler().then(() => process.exit(1));
 });
-process.on('exit', exit_handler);
