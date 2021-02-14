@@ -51,7 +51,7 @@ const exit_handler = async () => {
 });
 
 process.on('SIGINT', () => {
-	exit_handler().then(() => process.exit(0));
+	exit_handler().then(() => process.exit(130));
 });
 process.on('uncaughtException', (e) => {
 	logger.fatal(e);
