@@ -1,5 +1,6 @@
 'use strict';
 
+import cookie_parser = require('cookie-parser');
 import pino = require('pino');
 const logger = pino({ 'name': 'main', });
 const web_logger = logger.child({ 'name': 'http', });
@@ -46,6 +47,16 @@ const exit_handler = async () => {
 	app.use(http_logger);
 
 	if (config.DEBUG) { app.use(express.static('web/dist/static')); }
+
+	app.use(cookie_parser());
+
+	app.get('/user_problems', async (req, res) => {
+		if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string')) {
+			res.send(await database.get_user_problems(req.cookies.user_string));
+		} else {
+			res.send([ 1, ]);
+		}
+	});
 
 	app.listen(config.PORT, () => logger.info('listening on %d', config.PORT));
 })().catch((reason) => {
