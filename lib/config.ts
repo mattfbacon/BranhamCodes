@@ -7,7 +7,7 @@ interface Config {
 }
 
 const config: Config = {
-	'DEBUG': false,
+	'DEBUG': true,
 	'KEY': null,
 	'PORT': 9000,
 };
