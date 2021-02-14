@@ -6,8 +6,7 @@ const get_problems = function() {
 	xmlhttp.open('GET', '/user_problems', true);
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-			string = xmlhttp.responseText;
-			const problems = JSON.parse(string);
+			const problems = JSON.parse(xmlhttp.responseText);
 			localStorage.setItem('problems', problems);
 		}
 	};
