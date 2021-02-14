@@ -1,3 +1,5 @@
+'use strict';
+
 export default {
-	PORT: 9000
+	'PORT': 9000,
 };

@@ -1,18 +1,20 @@
+'use strict';
+
 import pino = require('pino');
-const logger = pino({'name': 'main'});
-const web_logger = logger.child({'name': 'http'});
+const logger = pino({ 'name': 'main', });
+const web_logger = logger.child({ 'name': 'http', });
 import pino_http = require('pino-http')
-const http_logger = pino_http({'name': 'http'});
+const http_logger = pino_http({ 'name': 'http', });
 import express = require('express');
 import mongo = require('mongodb');
 
-import config from "./lib/config";
-import { DBManager } from './lib/database';
+import { DBManager, } from './lib/database';
+import config from './lib/config';
 
 const DB_URL = 'mongodb://localhost:27017';
 const DB_NAME = 'branhamcodes';
 
-(async () => {
+(async() => {
 	let _conn: mongo.MongoClient;
 
 	try {
@@ -26,9 +28,8 @@ const DB_NAME = 'branhamcodes';
 
 		app.listen(config.PORT, () => logger.info('listening on %d', config.PORT));
 	} catch (e) {
-		logger.fatal(e);
 		logger.info('shutting down MongoDB');
-		_conn.close().then(() => process.exit());
-		process.exit();
+		await _conn.close();
+		process.exit(); // eslint-disable-line no-process-exit -- inside a promise so can't throw
 	}
 })();
