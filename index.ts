@@ -54,7 +54,7 @@ const exit_handler = async () => {
 		if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string')) {
 			res.send(await database.get_user_problems(req.cookies.user_string));
 		} else {
-			res.send([ 1, ]);
+			res.send([ 1 ]);
 		}
 	});
 
