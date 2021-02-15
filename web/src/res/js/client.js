@@ -1,18 +1,15 @@
 'use strict';
 
 const get_problems = async function() {
-	await fetch('/user_problems')
-		.then(response => response.json())
-		.then(data => {
-			localStorage.setItem('problems', data);
-		});
+	const response = await fetch('/user_problems');
+	return response.json();
 };
 
 if (localStorage.getItem('problems') === null) {
 	(async () => {
 		const problems = await get_problems();
-
+		localStorage.setItem('problems', problems);
 	})().catch((reason) => {
-
+		console.log(reason);
 	});
 }
