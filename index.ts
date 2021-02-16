@@ -10,11 +10,12 @@ import express = require('express');
 import mongo = require('mongodb');
 import { DBManager, } from './lib/database';
 import config from './lib/config';
-import { promises as fs } from 'fs';
+import { promises as fs, } from 'fs';
 
 const DB_URL = 'mongodb://localhost:27017';
 const DB_NAME = 'branhamcodes';
-let graph;
+
+let graph: number[][];
 
 (async () => {
 	graph = JSON.parse(await fs.readFile('graph.json', 'utf-8') as string);
@@ -65,8 +66,13 @@ const exit_handler = async () => {
 		}
 	});
 
-	app.get('/graph', async (req, res) => {
-		res.send(graph);
+	app.get('/graph', (req, res) => {
+		if (typeof graph === 'undefined') {
+			res.status(503); // service unavailable
+			res.end();
+		} else {
+			res.send(graph);
+		}
 	});
 
 	app.listen(config.PORT, () => logger.info('listening on %d', config.PORT));
