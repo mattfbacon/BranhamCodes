@@ -23,12 +23,12 @@
 	const config = {
 		'edgeStyle': {
 			'all': {
-				'color': '#CCC',
+				'color': '#606c76',
 				'hidden': {
-					'color': '#CCC',
+					'color': '#606c76',
 				},
 				'highlighted': {
-					'color': '#CCC',
+					'color': '#606c76',
 				},
 				'opacity': 0.2,
 				'selected': {
@@ -47,9 +47,7 @@
 		'nodeStyle': {
 			'solved': {
 				'borderColor': 'none',
-				'color'(d) {
-					if (d.getProperties().root) { return '#0366fc'; } return '#68B9FE';
-				},
+				'color': '#9b4dca',
 				'radius'(d) {
 					if (d.getProperties().root) { return 20; } return 10;
 				},
@@ -57,7 +55,7 @@
 			'unsolved': {
 				'borderColor': 'none',
 				'color'(d) {
-					return '#ff3333';
+					return '#ffa9d2';
 				},
 				'opacity': 0.2,
 				'radius'(d) {
@@ -75,9 +73,11 @@
 		for (let x = 0; x < global_graph.length; x++) {
 			if (nodes.includes(x + 1)) {
 				graph.push([]);
-				for (let y = 0; y < global_graph[x].length; y++) {
-					if (nodes.includes(global_graph[x][y])) {
-						graph[x].push(global_graph[x][y]);
+				if (x < global_graph.length) {
+					for (let y = 0; y < global_graph[x].length; y++) {
+						if (nodes.includes(global_graph[x][y])) {
+							graph[x].push(global_graph[x][y]);
+						}
 					}
 				}
 			}
@@ -118,7 +118,8 @@
 		return jsonGraph;
 	};
 	// start alchemy
-	const nodes = JSON.parse(localStorage.getItem('problems'));
+	//const nodes = JSON.parse(localStorage.getItem('problems'));
+	const nodes = [1,2,3];
 	config.dataSource = nodesToJson(nodes);
 	// eslint-disable-next-line no-undef
 	alchemy.begin(config);
