@@ -1,25 +1,16 @@
 'use strict';
 
 (async () => {
-	const get_problems = async function() {
-		const response = await fetch('/user_problems');
-		return response.json();
-	};
-
-	if (localStorage.getItem('problems') === null) {
-		const problems = await get_problems();
-		localStorage.setItem('problems', JSON.stringify(problems));
+	const my_problems = await (await fetch('/user_problems')).json();
+	const problems_to_show = new Set(my_problems);
+	// the problem structure for every problem (visible and not visible)
+	const global_graph = await (await fetch('/graph.json')).json(); // index is node number - 1 (so idx 0 = first node)
+	const my_graph = [];
+	for (const problem of my_problems) {
+		const problem_s_children = global_graph[problem - 1];
+		my_graph[problem - 1] = problem_s_children; // index is 1 less than problem number
+		problem_s_children.forEach(child => problems_to_show.add(child));
 	}
-})().catch((reason) => {
-	console.log(reason);
-});
-
-(async () => {
-	const get_graph = async function() {
-		const response = await fetch('/graph');
-		return response.json();
-	};
-	const global_graph = await get_graph();
 	const config = {
 		'edgeStyle': {
 			'all': {
@@ -68,62 +59,32 @@
 		},
 		'rootNodeRadius': 70,
 	};
-	const nodesToJson = function(nodes) {
-		const graph = [];
-		for (let x = 0; x < global_graph.length; x++) {
-			if (nodes.includes(x + 1)) {
-				graph.push([]);
-				if (x < global_graph.length) {
-					for (let y = 0; y < global_graph[x].length; y++) {
-						if (nodes.includes(global_graph[x][y])) {
-							graph[x].push(global_graph[x][y]);
-						}
-					}
-				}
-			}
-		}
-		const jsonGraph = {
-			'edges': [],
-			'nodes': [],
-		};
-		// push all the individual nodes into the jsonGraph
-		for (let x = 0; x < nodes.length; x++) {
-			jsonGraph.nodes.push(
-				{
-					'id': nodes[x],
-					'name': nodes[x],
-				}
-			);
-			if (nodes[x] === 1) {
-				jsonGraph.nodes[jsonGraph.nodes.length - 1].root = true;
-			}
-			if (graph[nodes[x] - 1].length === 0) {
-				jsonGraph.nodes[jsonGraph.nodes.length - 1].type = 'unsolved';
-			} else {
-				jsonGraph.nodes[jsonGraph.nodes.length - 1].type = 'solved';
-			}
-		}
-		// push all the individual edges into the jsonGraph
-		for (let x = 0; x < graph.length; x++) {
-			for (let y = 0; y < graph[x].length; y++) {
-				jsonGraph.edges.push(
-					{
-						'source': x + 1,
-						'target': graph[x][y],
-					}
-				);
-			}
-		}
-		// return the built json
-		return jsonGraph;
-	};
 	// start alchemy
-	const nodes = JSON.parse(localStorage.getItem('problems'));
-	config.dataSource = nodesToJson(nodes);
+	config.dataSource = {
+		'edges': my_graph.reduce((acc, targets, source_idx) => { // source problem number = source_idx + 1
+			if (typeof targets !== 'undefined') { // my_graph is sparse
+				targets.forEach(target => acc.push({
+					'source': source_idx + 1,
+					target,
+				}));
+			}
+			return acc;
+		}, []),
+		'nodes': Array.from(problems_to_show).reduce((acc, problem_s_children, problem_idx) => { // add 1 to problem_idx to get the problem number
+			if (typeof problem_s_children !== 'undefined') { // my_graph is sparse
+				acc.push({
+					'id': problem_idx + 1,
+					'name': problem_idx + 1,
+					'root': !problem_idx, // node_idx === 0
+					'type': problem_s_children.length ? 'solved' : 'unsolved', // if there are children, it's solved
+				});
+			}
+			return acc;
+		}, []),
+	};
+	debugger;
 	// eslint-disable-next-line no-undef
 	alchemy.begin(config);
-
 })().catch((reason) => {
 	console.log(reason);
 });
-
