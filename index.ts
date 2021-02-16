@@ -18,7 +18,7 @@ const DB_NAME = 'branhamcodes';
 let graph: number[][];
 
 (async () => {
-	graph = JSON.parse(await fs.readFile('graph.json', 'utf-8') as string);
+	graph = JSON.parse(await fs.readFile('web/dist/static/graph.json', 'utf-8') as string);
 })().catch((reason) => {
 	throw reason;
 });
@@ -63,15 +63,6 @@ const exit_handler = async () => {
 			res.send(await database.get_user_problems(req.cookies.user_string));
 		} else {
 			res.send([ 1, ]);
-		}
-	});
-
-	app.get('/graph', (req, res) => {
-		if (typeof graph === 'undefined') {
-			res.status(503); // service unavailable
-			res.end();
-		} else {
-			res.send(graph);
 		}
 	});
 
