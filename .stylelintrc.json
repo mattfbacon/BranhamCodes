@@ -1,9 +1,10 @@
 {
 	"extends": "stylelint-config-standard",
 	"rules": {
-		"declaration-colon-space-after": "never",
+		"indentation": "tab",
+		"declaration-colon-space-after": "always",
 		"number-leading-zero": "never",
-		"rule-empty-line-before":  ["always", { "except": ["after-single-line-comment", "inside-block", "first-nested"] }],
+		"rule-empty-line-before": ["always", { "except": ["after-single-line-comment", "inside-block", "first-nested"] }],
 		"no-descending-specificity": null,
 		"declaration-empty-line-before": null,
 		"selector-list-comma-newline-after": "never-multi-line",

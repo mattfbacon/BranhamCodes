@@ -1,0 +1,25 @@
+:root {
+	--accent-color: #5a89cf;
+}
+
+body {
+	font-family: "Source Sans Pro", "Roboto", sans-serif;
+}
+
+#nav {
+	display: flex;
+	flex-direction: row;
+	justify-content: stretch;
+	align-items: center;
+	background-color: var(--accent-color);
+	color: #f4f5f6;
+	line-height: 1;
+	padding: 1.2rem;
+	font-weight: 500;
+	& > .spacer {
+		flex: 1;
+	}
+	a {
+		color: inherit;
+	}
+}
