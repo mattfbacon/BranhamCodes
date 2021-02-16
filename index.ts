@@ -8,12 +8,19 @@ import pino_http = require('pino-http')
 const http_logger = pino_http({ 'name': 'http', });
 import express = require('express');
 import mongo = require('mongodb');
-
 import { DBManager, } from './lib/database';
 import config from './lib/config';
+import { promises as fs } from 'fs';
 
 const DB_URL = 'mongodb://localhost:27017';
 const DB_NAME = 'branhamcodes';
+let graph;
+
+(async () => {
+	graph = JSON.parse(await fs.readFile('graph.json', 'utf-8') as string);
+})().catch((reason) => {
+	throw reason;
+});
 
 let _conn: mongo.MongoClient;
 
@@ -54,8 +61,12 @@ const exit_handler = async () => {
 		if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string')) {
 			res.send(await database.get_user_problems(req.cookies.user_string));
 		} else {
-			res.send([ 1 ]);
+			res.send([ 1, ]);
 		}
+	});
+
+	app.get('/graph', async (req, res) => {
+		res.send(graph);
 	});
 
 	app.listen(config.PORT, () => logger.info('listening on %d', config.PORT));
