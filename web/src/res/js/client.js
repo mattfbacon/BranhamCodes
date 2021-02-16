@@ -118,8 +118,7 @@
 		return jsonGraph;
 	};
 	// start alchemy
-	//const nodes = JSON.parse(localStorage.getItem('problems'));
-	const nodes = [1,2,3];
+	const nodes = JSON.parse(localStorage.getItem('problems'));
 	config.dataSource = nodesToJson(nodes);
 	// eslint-disable-next-line no-undef
 	alchemy.begin(config);
