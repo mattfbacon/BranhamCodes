@@ -1,15 +1,15 @@
 'use strict';
 
+const intersection = (a, b) => a.filter(Set.prototype.has, new Set(b));
+
 (async () => {
 	const my_problems = await (await fetch('/user_problems')).json();
-	const problems_to_show = new Set(my_problems);
+	const my_problems_set = new Set(my_problems);
 	// the problem structure for every problem (visible and not visible)
 	const global_graph = await (await fetch('/graph.json')).json(); // index is node number - 1 (so idx 0 = first node)
 	const my_graph = [];
 	for (const problem of my_problems) {
-		const problem_s_children = global_graph[problem - 1];
-		my_graph[problem - 1] = problem_s_children; // index is 1 less than problem number
-		problem_s_children.forEach(child => problems_to_show.add(child));
+		my_graph[problem - 1] = global_graph[problem - 1]; // index is 1 less than problem number
 	}
 	const config = {
 		'edgeStyle': {
@@ -63,14 +63,14 @@
 	config.dataSource = {
 		'edges': my_graph.reduce((acc, targets, source_idx) => { // source problem number = source_idx + 1
 			if (typeof targets !== 'undefined') { // my_graph is sparse
-				targets.forEach(target => acc.push({
+				targets.filter(Set.prototype.has, my_problems_set).forEach(target => acc.push({
 					'source': source_idx + 1,
 					target,
 				}));
 			}
 			return acc;
 		}, []),
-		'nodes': Array.from(problems_to_show).reduce((acc, problem_s_children, problem_idx) => { // add 1 to problem_idx to get the problem number
+		'nodes': my_problems.reduce((acc, problem_s_children, problem_idx) => { // add 1 to problem_idx to get the problem number
 			if (typeof problem_s_children !== 'undefined') { // my_graph is sparse
 				acc.push({
 					'id': problem_idx + 1,
