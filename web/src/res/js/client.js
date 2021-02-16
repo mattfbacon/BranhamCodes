@@ -43,9 +43,7 @@
 			},
 			'unsolved': {
 				'borderColor': 'none',
-				'color'(d) {
-					return '#ffa9d2';
-				},
+				'color': '#ffa9d2',
 				'opacity': 0.2,
 				'radius'(d) {
 					if (d.getProperties().root) { return 20; } return 10;

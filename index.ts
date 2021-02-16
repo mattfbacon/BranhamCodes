@@ -1,5 +1,9 @@
 'use strict';
 
+declare global {
+
+}
+
 import cookie_parser = require('cookie-parser');
 import pino = require('pino');
 const logger = pino({ 'name': 'main', });
@@ -11,6 +15,7 @@ import mongo = require('mongodb');
 import { DBManager, } from './lib/database';
 import config from './lib/config';
 import { promises as fs, } from 'fs';
+import url = require('url');
 
 const DB_URL = 'mongodb://localhost:27017';
 const DB_NAME = 'branhamcodes';
@@ -54,8 +59,6 @@ const exit_handler = async () => {
 	const app = express();
 	app.use(http_logger);
 
-	if (config.DEBUG) { app.use(express.static('web/dist/static')); }
-
 	app.use(cookie_parser());
 
 	app.get('/user_problems', async (req, res) => {
@@ -65,6 +68,10 @@ const exit_handler = async () => {
 			res.send([ 1, ]);
 		}
 	});
+
+	if (config.DEBUG) {
+		app.use(express.static('web/dist/static'));
+	}
 
 	app.listen(config.PORT, () => logger.info('listening on %d', config.PORT));
 })().catch((reason) => {
