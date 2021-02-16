@@ -82,7 +82,6 @@
 			return acc;
 		}, []),
 	};
-	debugger;
 	// eslint-disable-next-line no-undef
 	alchemy.begin(config);
 })().catch((reason) => {
