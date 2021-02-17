@@ -71,13 +71,17 @@ const exit_handler = async () => {
 		}
 	});
 
+	app.get('/user_info', async (req, res) => {
+		if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string')) {
+			res.send({ 'avatar_url': await database.get_user_avatar(req.cookies.user_string), 'username': await database.get_user_name(req.cookies.user_string), });
+		} else {
+			res.send({ 'avatar_url': null, 'username': null, });
+		}
+	});
+
 	app.get('/login', async (req, res) => {
 		if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string')) {
-			res.send({
-				'avatar_url': await database.get_user_avatar(req.cookies.user_string),
-				'user_string': req.cookies.user_string,
-				'username': await database.get_user_name(req.cookies.user_string),
-			});
+			res.redirect('/')
 		} else {
 			res.redirect(`https://github.com/login/oauth/authorize?client_id=${config.GITHUB_ID}`);
 		}
@@ -110,7 +114,8 @@ const exit_handler = async () => {
 		})).body);
 
 		const user_string = await database.add_user(user.login, user.avatar_url);
-		res.redirect(`/?username=${user.login}&avatar_url=${user.avatar_url}&user_string=${user_string}`);
+		res.cookie('user_string', user_string);
+		res.redirect('/');
 
 	});
 	if (config.DEBUG) {

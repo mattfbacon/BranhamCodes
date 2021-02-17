@@ -1,5 +1,6 @@
 'use strict';
 
+// eslint-disable-next-line require-await
 (async () => {
 	const my_problems = await (await fetch('/user_problems')).json();
 	const my_problems_set = new Set(my_problems);
@@ -24,7 +25,7 @@
 				},
 				'width': 4,
 			},
-		  },
+		},
 		'fixNodes': false,
 		'fixRootNodes': true,
 		'initialTranslate': [ 0, 0, ],
