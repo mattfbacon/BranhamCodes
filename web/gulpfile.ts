@@ -25,7 +25,7 @@ const resources = (cb: () => any) => {
 		.pipe(svgmin())
 		.pipe(gulp.dest('./dist/static/res/'));
 	// js: uglify
-	gulp.src('./src/res/**/*.js')
+	gulp.src([ './src/res/**/*.js', '!./src/res/**/*.min.js', ])
 		.pipe(debug({ 'title': 'js', }))
 		.pipe(sourcemap.init())
 		.pipe(uglify())
@@ -56,8 +56,8 @@ const resources = (cb: () => any) => {
 		.pipe(cleancss())
 		.pipe(sourcemap.write('.'))
 		.pipe(gulp.dest('./dist/static/res/'));
-	// all others, including pre-minified CSS: just copy
-	gulp.src([ './src/res/**/!(*.less|*.css|*.ts|*.js|*.svg)', './src/res/**/*.min.css', ]).pipe(debug({ 'title': 'default', })).pipe(gulp.dest('./dist/static/res/'));
+	// all others, including pre-minified CSS and JS: just copy
+	gulp.src([ './src/res/**/!(*.less|*.css|*.ts|*.js|*.svg)', './src/res/**/*.min.css', './src/res/**/*.min.js']).pipe(debug({ 'title': 'default', })).pipe(gulp.dest('./dist/static/res/'));
 	cb();
 };
 
