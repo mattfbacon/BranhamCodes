@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block styles %}
+<link rel="stylesheet" href="/res/style/problem.css" type="text/css">
+{% endblock %}
+{% block content %}
+<main>
+<h1 class="problem_title">Problem {{num}}: {{name}}</h1>
+<h4 class="problem_author">By {{author}}</h4>
+{% block problem %}
+{% endblock %}
+<hr>
+<h2 id="examples">Example{% if examples.length > 1%}s{% endif %}</h2>
+{% for input, output in examples %}
+<h4 id="input-{{loop.index}}">Input</h4>
+<pre><code>{{input}}</code></pre>
+<h4 id="output-{{loop.index}}">Output</h4>
+<pre><code>{{output}}</code></pre>
+{% endfor %}
+</main>
+{% endblock %}
