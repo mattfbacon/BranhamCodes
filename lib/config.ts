@@ -2,13 +2,15 @@
 
 interface Config {
 	DEBUG: boolean;
-	KEY: string | null;
+	GITHUB_ID: string;
+	GITHUB_SECRET: string;
 	PORT: number;
 }
 
 const config: Config = {
 	'DEBUG': false,
-	'KEY': null,
+	'GITHUB_ID': null,
+	'GITHUB_SECRET': null,
 	'PORT': 9000,
 };
 
