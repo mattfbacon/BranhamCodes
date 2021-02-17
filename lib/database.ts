@@ -49,6 +49,24 @@ class DBManager {
 		db_logger.warn(`in get_user_problems: user does not exist: ${user_string}`);
 		return [ 1, ];
 	}
+	async get_user_name(user_string: string) {
+		const user = await this.get_user(user_string);
+		if (user !== null) {
+			db_logger.debug(`get_user_name: ${user_string}: ${user.username}`);
+			return user.username;
+		}
+		db_logger.warn(`in get_user_name: user does not exist: ${user_string}`);
+		return 'guest';
+	}
+	async get_user_avatar(user_string: string) {
+		const user = await this.get_user(user_string);
+		if (user !== null) {
+			db_logger.debug(`get_user_avatar: ${user_string}: ${user.avatar_url}`);
+			return user.avatar_url;
+		}
+		db_logger.warn(`in get_user_avatar: user does not exist: ${user_string}`);
+		return null;
+	}
 	async has_user_problem(user_string: string, problem_num: number) {
 		const user = await this.get_user(user_string);
 		if (user !== null) {

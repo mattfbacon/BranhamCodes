@@ -16,6 +16,8 @@ import { DBManager, } from './lib/database';
 import config from './lib/config';
 import { promises as fs, } from 'fs';
 import url = require('url');
+import phin = require('phin');
+import { parseConfigFileTextToJson } from 'typescript';
 
 const DB_URL = 'mongodb://localhost:27017';
 const DB_NAME = 'branhamcodes';
@@ -69,6 +71,48 @@ const exit_handler = async () => {
 		}
 	});
 
+	app.get('/login', async (req, res) => {
+		if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string')) {
+			res.send({
+				'avatar_url': await database.get_user_avatar(req.cookies.user_string),
+				'user_string': req.cookies.user_string,
+				'username': await database.get_user_name(req.cookies.user_string),
+			});
+		} else {
+			res.redirect(`https://github.com/login/oauth/authorize?client_id=${config.GITHUB_ID}`);
+		}
+	});
+
+	app.get('/oauth_callback', async (req, res) => {
+		const body = {
+			'client_id': config.GITHUB_ID,
+			'client_secret': config.GITHUB_SECRET,
+			'code': req.query.code,
+		};
+
+		const result = await JSON.parse((await phin({
+			'data': body,
+			'headers': { 'accept': 'application/json', },
+			'method': 'POST',
+			'url': 'https://github.com/login/oauth/access_token',
+		})).body);
+
+		const token = result.access_token;
+
+		const user = await JSON.parse((await phin({
+			'headers': {
+				'Authorization': `token ${token}`,
+				'Content-Type': 'application/json',
+				'user-agent': 'node.js',
+			},
+			'method': 'GET',
+			'url': 'https://api.github.com/user',
+		})).body);
+
+		const user_string = await database.add_user(user.login, user.avatar_url);
+		res.redirect(`/?username=${user.login}&avatar_url=${user.avatar_url}&user_string=${user_string}`);
+
+	});
 	if (config.DEBUG) {
 		app.use(express.static('web/dist/static'));
 	}
