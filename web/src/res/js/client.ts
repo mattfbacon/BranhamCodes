@@ -1,16 +1,27 @@
 'use strict';
 
+declare interface NodeType {
+	root: boolean;
+	id: number;
+	name: number;
+	type: 'solved' | 'unsolved';
+}
+declare interface AlchemyType {
+	begin(config: Record<string, any>): void;
+}
+declare const alchemy: AlchemyType;
+
 // eslint-disable-next-line require-await
 (async () => {
-	const my_problems = await (await fetch('/user_problems')).json();
+	const my_problems: number[] = await (await fetch('/user_problems')).json();
 	const my_problems_set = new Set(my_problems);
 	// the problem structure for every problem (visible and not visible)
-	const global_graph = await (await fetch('/graph.json')).json(); // index is node number - 1 (so idx 0 = first node)
-	const my_graph = [];
+	const global_graph: number[][] = await (await fetch('/graph.json')).json(); // index is node number - 1 (so idx 0 = first node)
+	const my_graph: (number | undefined)[][] = [];
 	for (const problem of my_problems) {
 		my_graph[problem - 1] = global_graph[problem - 1].filter(Set.prototype.has, my_problems_set); // index is 1 less than problem number
 	}
-	const config = {
+	const config: Record<string, any> = {
 		'edgeStyle': {
 			'all': {
 				'color': '#606c76',
@@ -29,7 +40,7 @@
 		'fixNodes': false,
 		'fixRootNodes': true,
 		'initialTranslate': [ 0, 0, ],
-		'nodeCaption': (node) => {
+		'nodeCaption': (node: NodeType) => {
 			return `Problem  ${node.name}`;
 		},
 		'nodeCaptionsOnByDefault': true,
@@ -38,7 +49,7 @@
 			'solved': {
 				'borderColor': 'none',
 				'color': '#9b4dca',
-				'radius'(d) {
+				'radius'(d: { getProperties(): NodeType }) {
 					if (d.getProperties().root) { return 20; } return 10;
 				},
 			},
@@ -46,7 +57,7 @@
 				'borderColor': 'none',
 				'color': '#ffa9d2',
 				'opacity': 0.2,
-				'radius'(d) {
+				'radius'(d: { getProperties(): NodeType }) {
 					if (d.getProperties().root) { return 20; } return 10;
 				},
 			},
@@ -58,7 +69,7 @@
 	};
 	// start alchemy
 	config.dataSource = {
-		'edges': my_graph.reduce((acc, targets, source_idx) => { // source problem number = source_idx + 1
+		'edges': my_graph.reduce((acc: {source: number, target: number}[], targets, source_idx: number) => { // source problem number = source_idx + 1
 			if (typeof targets !== 'undefined') { // my_graph is sparse
 				targets.filter(Set.prototype.has, my_problems_set).forEach(target => acc.push({
 					'source': source_idx + 1,
@@ -67,7 +78,7 @@
 			}
 			return acc;
 		}, []),
-		'nodes': my_graph.reduce((acc, problem_s_children, problem_idx) => { // add 1 to problem_idx to get the problem number
+		'nodes': my_graph.reduce((acc: NodeType[], problem_s_children, problem_idx: number) => { // add 1 to problem_idx to get the problem number
 			if (typeof problem_s_children !== 'undefined') { // my_graph is sparse
 				acc.push({
 					'id': problem_idx + 1,
@@ -79,7 +90,6 @@
 			return acc;
 		}, []),
 	};
-	// eslint-disable-next-line no-undef
 	alchemy.begin(config);
 })().catch((reason) => {
 	console.log(reason);
