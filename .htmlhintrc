@@ -17,6 +17,7 @@
 	"attr-quote-style": "double",
 	"attr-req-value": true,
 	"attr-new-line": false,
+	"attr-no-unnecessary-whitespace": true,
 	"attr-validate": true,
 	"id-no-dup": true,
 	"id-style": false,
