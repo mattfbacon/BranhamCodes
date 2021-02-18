@@ -934,7 +934,7 @@
         if (node._state !== "hidden") {
           var problem = (n.id).toString()
           console.log(problem)
-          window.location.replace(`/Problems/${problem}/${problem}.html`);
+          window.location.replace(`/problems/${problem}.html`);
           node._state = (function() {
             if (node._state === "selected") {
               return "active";
