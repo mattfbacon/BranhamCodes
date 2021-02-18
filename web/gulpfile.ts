@@ -68,13 +68,13 @@ const compile_pages = (cb: () => any) => {
 		.pipe(data(({ 'path': fpath, }) => ({ 'path': fpath.replace(__dirname, '').replace('/src/pages', '').replace(/\/?index\.html/, '').replace('.html', '').replace(/^\//, ''), })))
 		.pipe(nunjucks.compile({}, { env, }))
 		.pipe(sourcemap.init())
-		.pipe(htmlmin())
+		.pipe(htmlmin({ 'collapseWhitespace': true, }))
 		.pipe(sourcemap.write('.'))
 		.pipe(gulp.dest('./dist/static/'));
 	gulp.src('./src/dynamicpages/**/*.html')
 		.pipe(data(({ 'path': fpath, }) => ({ 'path': fpath.replace(__dirname, '').replace('/src/dynamicpages', '').replace(/\/?index\.html/, '').replace('.html', '').replace(/^\//, ''), })))
 		.pipe(nunjucks.compile({}, { env, }))
-		.pipe(htmlmin()) // no sourcemap since it won't match when the template is compiled
+		.pipe(htmlmin({ 'collapseWhitespace': true, })) // no sourcemap since it won't match when the template is compiled
 		.pipe(gulp.dest('./dist/dynamic/'));
 	cb();
 };
