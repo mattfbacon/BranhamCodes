@@ -3,7 +3,6 @@
 <link rel="stylesheet" href="/res/style/problem.css" type="text/css">
 {% endblock %}
 {% block content %}
-<main>
 <h1 class="problem_title">Problem {{num}}: {{name}}</h1>
 <h4 class="problem_author">By {{author}}</h4>
 {% block problem %}
@@ -24,5 +23,4 @@
 	<textarea style="resize: vertical;" id="text-submission" name="textsubmission" required></textarea>
 	<input type="submit"><input type="reset" class="button-outline">
 </form>
-</main>
 {% endblock %}

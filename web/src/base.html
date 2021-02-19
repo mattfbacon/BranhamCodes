@@ -13,7 +13,11 @@
 	</head>
 	<body>
 		{% include 'partials/nav.html' %}
+		{% block rawcontent %}
+		<main>
 		{% block content %}{% endblock %}
+		</main>
+		{% endblock %}
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
 		{% block scripts %}{% endblock %}
 		<script src="/res/js/navbar.js"></script>
