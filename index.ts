@@ -17,15 +17,17 @@ import config from './lib/config';
 import { promises as fs, } from 'fs';
 import url = require('url');
 import phin = require('phin');
-import { parseConfigFileTextToJson } from 'typescript';
+import { parseConfigFileTextToJson, } from 'typescript';
 
 const DB_URL = 'mongodb://localhost:27017';
 const DB_NAME = 'branhamcodes';
 
 let graph: number[][];
+let answers: string[];
 
 (async () => {
 	graph = JSON.parse(await fs.readFile('web/dist/static/graph.json', 'utf-8') as string);
+	answers = JSON.parse(await fs.readFile('answers.json', 'utf-8') as string);
 })().catch((reason) => {
 	throw reason;
 });
@@ -63,6 +65,10 @@ const exit_handler = async () => {
 
 	app.use(cookie_parser());
 
+	app.use(express.urlencoded({
+		'extended': true,
+	}));
+
 	app.get('/user_problems', async (req, res) => {
 		if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string')) {
 			res.send(await database.get_user_problems(req.cookies.user_string));
@@ -81,9 +87,39 @@ const exit_handler = async () => {
 
 	app.get('/login', async (req, res) => {
 		if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string')) {
-			res.redirect('/')
+			res.redirect('/');
 		} else {
 			res.redirect(`https://github.com/login/oauth/authorize?client_id=${config.GITHUB_ID}`);
+		}
+	});
+
+	app.post('/submit_problem', async (req, res) => {
+		const problem = parseInt(req.query.problem[0], 10);
+		const answer = req.body.textsubmission;
+		let wrong = 'false';
+		if (problem && problem <= answers.length) {
+			if (answers[problem - 1] === answer) {
+				if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string')) {
+					if (await database.has_user_problem(req.cookies.user_string, parseInt(answer, 10))) {
+						for (let x = 0; x < graph[problem - 1].length; x++) {
+							// eslint-disable-next-line no-await-in-loop
+							await database.add_user_problems(req.cookies.user_string, graph[problem - 1][x]);
+						}
+					}
+					res.redirect(`/app.html?problem=${problem}`);
+				} else {
+					res.redirect(`/app.html?problem=${problem}`);
+				}
+			} else if (answers[problem - 1] > answer) {
+				wrong = 'too_small';
+			} else {
+				wrong = 'too_big';
+			}
+		} else {
+			wrong = 'invalid';
+		}
+		if (wrong !== 'wrong') {
+			res.redirect('/' + wrong + '.html');
 		}
 	});
 
