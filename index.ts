@@ -118,9 +118,7 @@ const exit_handler = async () => {
 		} else {
 			wrong = 'invalid';
 		}
-		if (wrong !== 'wrong') {
-			res.redirect('/' + wrong + '.html');
-		}
+		res.redirect('/' + wrong + '.html');
 	});
 
 	app.get('/oauth_callback', async (req, res) => {
