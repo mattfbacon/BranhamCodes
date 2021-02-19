@@ -1,7 +1,11 @@
 'use strict';
 
-declare global {
-
+declare interface ProblemResponse {
+	num: number;
+	result: string;
+	submission: number;
+	submissiontext: string;
+	type: 'correct' | 'incorrect' | 'unevaluated';
 }
 
 import cookie_parser = require('cookie-parser');
@@ -12,25 +16,14 @@ import pino_http = require('pino-http')
 const http_logger = pino_http({ 'name': 'http', });
 import express = require('express');
 import mongo = require('mongodb');
+import nunjucks = require('nunjucks');
 import { DBManager, } from './lib/database';
 import config from './lib/config';
 import { promises as fs, } from 'fs';
-import url = require('url');
 import phin = require('phin');
-import { parseConfigFileTextToJson, } from 'typescript';
 
 const DB_URL = 'mongodb://localhost:27017';
 const DB_NAME = 'branhamcodes';
-
-let graph: number[][];
-let answers: string[];
-
-(async () => {
-	graph = JSON.parse(await fs.readFile('web/dist/static/graph.json', 'utf-8') as string);
-	answers = JSON.parse(await fs.readFile('answers.json', 'utf-8') as string);
-})().catch((reason) => {
-	throw reason;
-});
 
 let _conn: mongo.MongoClient;
 
@@ -45,6 +38,9 @@ const exit_handler = async () => {
 };
 
 (async () => {
+	const graph: number[][] = JSON.parse(await fs.readFile('web/dist/static/graph.json', 'utf-8') as string);
+	const answers: number[] = JSON.parse(await fs.readFile('answers.json', 'utf-8') as string);
+
 	_conn = new mongo.MongoClient(DB_URL);
 	try {
 		await _conn.connect();
@@ -61,6 +57,16 @@ const exit_handler = async () => {
 	const database = new DBManager(_database);
 
 	const app = express();
+	app.set('query parser', 'simple'); // https://stackoverflow.com/questions/29960764/what-does-extended-mean-in-express-4-0
+
+	nunjucks.configure('web/dist/dynamic/', {
+		'express': app,
+		'lstripBlocks': true,
+		'noCache': config.DEBUG,
+		'trimBlocks': true,
+	}).addGlobal('isNaN', isNaN);
+	app.set('view engine', 'html');
+
 	app.use(http_logger);
 
 	app.use(cookie_parser());
@@ -85,7 +91,7 @@ const exit_handler = async () => {
 		}
 	});
 
-	app.get('/login', async (req, res) => {
+	app.get('/login', (req, res) => {
 		if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string')) {
 			res.redirect('/');
 		} else {
@@ -94,31 +100,60 @@ const exit_handler = async () => {
 	});
 
 	app.post('/submit_problem', async (req, res) => {
-		const problem = parseInt(req.query.problem[0], 10);
-		const answer = req.body.textsubmission;
-		let wrong = 'false';
-		if (problem && problem <= answers.length) {
-			if (answers[problem - 1] === answer) {
-				if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string')) {
-					if (await database.has_user_problem(req.cookies.user_string, parseInt(answer, 10))) {
-						for (let x = 0; x < graph[problem - 1].length; x++) {
-							// eslint-disable-next-line no-await-in-loop
-							await database.add_user_problems(req.cookies.user_string, graph[problem - 1][x]);
-						}
-					}
-					res.redirect(`/app.html?problem=${problem}`);
-				} else {
-					res.redirect(`/app.html?problem=${problem}`);
-				}
-			} else if (answers[problem - 1] > answer) {
-				wrong = 'too_small';
-			} else {
-				wrong = 'too_big';
-			}
-		} else {
-			wrong = 'invalid';
+		if (!Object.prototype.hasOwnProperty.call(req.query, 'problem')) {
+			res.status(400);
+			res.send('No problem number provided.');
+			return;
 		}
-		res.redirect('/' + wrong + '.html');
+		const problem_index = parseInt(req.query.problem as string, 10) - 1; // NaN propagates so NaN - 1 is NaN
+		if (isNaN(problem_index)) { // no problem number provided
+			res.status(400); // bad request
+			res.send('No problem number provided.');
+			return;
+		}
+		if (problem_index >= answers.length) { // problem number out of range, so problem does not exist
+			res.status(400);
+			res.send('Problem does not exist.');
+			return;
+		}
+		// at this point we know it's a valid problem, so we just need to check the answer
+		if (!Object.prototype.hasOwnProperty.call(req.body, 'textsubmission')) {
+			res.status(400);
+			res.send('No answer body was recieved.');
+			return;
+		}
+		if (isNaN(req.body.textsubmission)) {
+			res.render('problem_response', {
+				'num': problem_index + 1,
+				'result': 'Response was not a number.',
+				'submission': NaN,
+				'submissiontext': req.body.textsubmission,
+				'type': 'unevaluated',
+			} as ProblemResponse);
+			return;
+		}
+		const answer = parseInt(req.body.textsubmission as string, 10);
+		if (answers[problem_index] === answer) {
+			if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string') && await database.has_user_problem(req.cookies.user_string, answer)) { // logged in and can access
+				await database.add_user_problems(req.cookies.user_string, ...graph[problem_index]);
+			}
+			res.render('problem_response', {
+				'num': problem_index + 1,
+				'result': 'You got it right!',
+				'submission': answer,
+				'submissiontext': req.body.textsubmission,
+				'type': 'correct',
+			} as ProblemResponse);
+			return;
+		}
+		// the answer was wrong.
+		res.render('problem_response', {
+			'num': problem_index + 1,
+			'result': `Too ${answer > answers[problem_index] ? 'big' : 'small'}.`,
+			'submission': answer,
+			'submissiontext': req.body.textsubmission,
+			'type': 'incorrect',
+		} as ProblemResponse);
 	});
 
 	app.get('/oauth_callback', async (req, res) => {
