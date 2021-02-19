@@ -2,20 +2,39 @@ main {
 	padding: 1rem;
 }
 
-.problem_title {
-	margin-bottom: 0;
-}
-
 h2#examples {
 	line-height: 1;
 	margin-bottom: 0;
 }
 
-h2#examples, .problem_author {
+h1.problem_title, h2#examples, .problem_author {
 	margin-top: 0;
+}
+
+h3#submit-header {
+	margin-bottom: 0;
+	margin-top: .5rem;
 }
 
 hr, h4[id^=input], h4[id^=output], pre {
 	margin-top: 1rem;
 	margin-bottom: 1rem;
+}
+
+h1.problem_title, textarea {
+	margin-bottom: 0;
+}
+
+textarea:invalid ~ input[type=submit] {
+	// make button look disabled if the input is invalid
+	cursor: default;
+	opacity: .5;
+	&:hover {
+		background-color: var(--accent-color);
+		border-color: var(--accent-color);
+	}
+}
+
+input[type=submit] {
+	margin-right: ~"calc(.6rem + 1px)"; // same as line-height to make spacing visually consistent
 }

@@ -17,6 +17,12 @@
 <pre><code>{{output}}</code></pre>
 {% endfor %}
 <hr>
-<a href="/problems/{{num}}.txt">Get your input</a>
+<h3 id="submit-header">Submit a Solution</h3>
+<form id="submit-problem" action="/submit_problem?problem={{num}}" method="POST">
+	<a href="/problems/{{num}}.txt">Get your input</a>
+	<label for="text-submission">Your program's output:</label>
+	<textarea style="resize: vertical;" id="text-submission" name="textsubmission" required></textarea>
+	<input type="submit"><input type="reset" class="button-outline">
+</form>
 </main>
 {% endblock %}
