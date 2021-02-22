@@ -17,9 +17,9 @@
 {% if newproblems %}
 <script>
 	let problems = JSON.parse(localStorage.getItem('problems'));
-	if (problems === null) { problems = []; }
-	problems.push({{newproblems}});
-	localStorage.setItem('problems', JSON.stringify(problems));
+	problems = new Set(problems === null ? [ 1, ] : problems);
+	[{{newproblems}}].forEach(problem => problems.add(problem));
+	localStorage.setItem('problems', JSON.stringify([...problems]));
 </script>
 {% endif %}
 {% endraw %}
