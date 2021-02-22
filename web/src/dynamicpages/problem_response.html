@@ -13,12 +13,14 @@
 {% endraw %}
 {% endblock %}
 {% block scripts %}
+{% raw %}
 {% if newproblems %}
 <script>
 	let problems = JSON.parse(localStorage.getItem('problems'));
 	if (problems === null) { problems = []; }
-	problems.push({% raw %}{{newproblems}}{% endraw %});
+	problems.push({{newproblems}});
 	localStorage.setItem('problems', JSON.stringify(problems));
 </script>
 {% endif %}
+{% endraw %}
 {% endblock %}
