@@ -12,3 +12,13 @@
 <p>Your submission was <code>{{submissiontext}}</code> which was {% if isNaN(submission) %}unable to be parsed{% else %}parsed as <code>{{submission}}</code>{% endif %}.</p>
 {% endraw %}
 {% endblock %}
+{% block scripts %}
+{% if newproblems %}
+<script>
+	let problems = JSON.parse(localStorage.getItem('problems'));
+	if (problems === null) { problems = []; }
+	problems.push({% raw %}{{newproblems}}{% endraw %});
+	localStorage.setItem('problems', JSON.stringify(problems));
+</script>
+{% endif %}
+{% endblock %}

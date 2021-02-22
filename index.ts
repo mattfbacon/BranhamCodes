@@ -1,6 +1,7 @@
 'use strict';
 
 declare interface ProblemResponse {
+	newproblems?: number[];
 	num: number;
 	result: string;
 	submission: number;
@@ -138,6 +139,7 @@ const exit_handler = async () => {
 				await database.add_user_problems(req.cookies.user_string, ...graph[problem_index]);
 			}
 			res.render('problem_response', {
+				'newproblems': Object.prototype.hasOwnProperty.call(req.cookies, 'user_string') ? (void 0) : graph[problem_index],
 				'num': problem_index + 1,
 				'result': 'You got it right!',
 				'submission': answer,
