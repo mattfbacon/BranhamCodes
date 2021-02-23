@@ -13,7 +13,10 @@ declare const alchemy: AlchemyType;
 
 // eslint-disable-next-line require-await
 (async () => {
-	const my_problems: number[] = await (await fetch('/user_problems')).json();
+	let my_problems: number[] = await (await fetch('/user_problems')).json();
+	if (localStorage.getItem('problems')) {
+		my_problems = await JSON.parse(localStorage.getItem('problems'));
+	}
 	const my_problems_set = new Set(my_problems);
 	// the problem structure for every problem (visible and not visible)
 	const global_graph: number[][] = await (await fetch('/graph.json')).json(); // index is node number - 1 (so idx 0 = first node)
