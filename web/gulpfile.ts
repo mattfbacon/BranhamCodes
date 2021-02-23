@@ -57,7 +57,7 @@ const resources = (cb: () => any) => {
 		.pipe(sourcemap.write('.'))
 		.pipe(gulp.dest('./dist/static/res/'));
 	// all others, including pre-minified CSS and JS: just copy
-	gulp.src([ './src/res/**/!(*.less|*.css|*.ts|*.js|*.svg)', './src/res/**/*.min.css', './src/res/**/*.min.js']).pipe(debug({ 'title': 'default', })).pipe(gulp.dest('./dist/static/res/'));
+	gulp.src([ './src/res/**/!(*.less|*.css|*.ts|*.js|*.svg)', './src/res/**/*.min.css', './src/res/**/*.min.js', ]).pipe(debug({ 'title': 'default', })).pipe(gulp.dest('./dist/static/res/'));
 	cb();
 };
 
