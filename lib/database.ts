@@ -5,12 +5,6 @@ import pino = require('pino');
 import { v4 as uuid, } from 'uuid';
 const db_logger = pino({ 'name': 'db', });
 
-/*
-username: string
-avatar_url: string
-problems: array
-user_string: string
-*/
 declare interface User {
 	_id: any;
 	username: string;
@@ -18,12 +12,6 @@ declare interface User {
 	problems: number[];
 	user_string: string;
 }
-
-declare interface UserInfo {
-	username: string;
-	url: string;
-}
-
 
 class DBManager {
 	db: mongo.Collection;

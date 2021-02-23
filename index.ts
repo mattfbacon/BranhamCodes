@@ -9,7 +9,6 @@ declare interface ProblemResponse {
 	type: 'correct' | 'incorrect' | 'unevaluated';
 }
 
-
 import cookie_parser = require('cookie-parser');
 import pino = require('pino');
 const logger = pino({ 'name': 'main', });
@@ -60,7 +59,6 @@ const exit_handler = async () => {
 
 	let leaderboard: Partial<User>[] = await database.get_leader_board();
 
-	console.log(leaderboard);
 	const app = express();
 	app.set('query parser', 'simple'); // https://stackoverflow.com/questions/29960764/what-does-extended-mean-in-express-4-0
 
