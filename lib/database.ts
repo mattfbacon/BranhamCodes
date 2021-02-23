@@ -91,16 +91,12 @@ class DBManager {
 		});
 		return true;
 	}
-	async get_leader_board() {
-		const all_rows = (await this.db.find().toArray()).filter(item => {
-			return item.avatar_url !== null;
-		}).sort((a, b) => {
-			// eslint-disable-next-line no-nested-ternary
-			return a.problems.length < b.problems.length ? -1 : (a.problems.length > b.problems.length ? 1 : 0);
-		}).map(item => ({
-			'url': item.avatar_url, 'username': item.username,
-		}));
-		return all_rows;
+	get_leaderboard(): Promise<User[]> {
+		return this.db.aggregate([
+			{ '$match': { 'avatar_url': { '$ne': null, }, }, }, // make sure avatar_url is not null
+			{ '$addFields': { 'problems_count': { '$size': { '$ifNull': [ '$problems', [], ], }, }, }, }, // add a field that counts the number of problems
+			{ '$sort': { 'problems_count': -1, }, }, // sort descending by that field
+		]).toArray(); // toArray returns a Promise
 	}
 }
 

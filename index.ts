@@ -57,7 +57,7 @@ const exit_handler = async () => {
 	const _database = _conn.db(DB_NAME).collection('users');
 	const database = new DBManager(_database);
 
-	let leaderboard: Partial<User>[] = await database.get_leader_board();
+	let leaderboard = await database.get_leaderboard();
 
 	const app = express();
 	app.set('query parser', 'simple'); // https://stackoverflow.com/questions/29960764/what-does-extended-mean-in-express-4-0
@@ -143,7 +143,7 @@ const exit_handler = async () => {
 		if (answers[problem_index] === answer) {
 			if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string') && await database.has_user_problem(req.cookies.user_string, answer)) { // logged in and can access
 				await database.add_user_problems(req.cookies.user_string, ...graph[problem_index]);
-				leaderboard = await database.get_leader_board();
+				database.get_leaderboard().then(result => { leaderboard = result; }); // does not need to be awaited
 			}
 			res.render('problem_response', {
 				'newproblems': Object.prototype.hasOwnProperty.call(req.cookies, 'user_string') ? (void 0) : graph[problem_index],
