@@ -112,7 +112,7 @@ const exit_handler = async () => {
 			res.send('No problem number provided.');
 			return;
 		}
-		const problem_index = parseInt(req.query.problem as string, 10) - 1; // naN propagates so NaN - 1 is NaN
+		const problem_index = parseInt(req.query.problem as string, 10) - 1; // NaN propagates so NaN - 1 is NaN
 		if (isNaN(problem_index)) { // no problem number provided
 			res.status(400); // bad request
 			res.send('No problem number provided.');
