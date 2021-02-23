@@ -11,6 +11,13 @@ avatar_url: string
 problems: array
 user_string: string
 */
+declare interface User {
+	_id: any;
+	username: string;
+	avatar_url: string;
+	problems: number[];
+	user_string: string;
+}
 
 class DBManager {
 	db: mongo.Collection;
@@ -20,12 +27,12 @@ class DBManager {
 	async DELETE_ENTIRE_DATABASE() {
 		await this.db.drop();
 	}
-	private get_user(user_string: string) {
+	private get_user(user_string: string): Promise<User> {
 		db_logger.debug(`get_user: ${user_string}`);
 		return this.db.findOne({ user_string, });
 	}
-	async add_user(username: string, url: string) {
-		const user = await this.db.findOne({ username, });
+	async add_user(username: string, url: string): Promise<string> {
+		const user = await this.db.findOne({ username, } as Partial<User>);
 		if (user === null) {
 			const user_string = uuid();
 			db_logger.debug(`add_user: ${username} ${url} ${user_string}`);
@@ -34,13 +41,13 @@ class DBManager {
 				'problems': [ 1, ],
 				user_string,
 				username,
-			});
+			} as User);
 			return user_string;
 		}
 		db_logger.warn(`in add_user: user already exists: ${username}`);
 		return user.user_string;
 	}
-	async get_user_problems(user_string: string) {
+	async get_user_problems(user_string: string): Promise<number[]> {
 		const user = await this.get_user(user_string);
 		if (user !== null) {
 			db_logger.debug(`get_user_problems: ${user_string}: ${user.problems}`);
@@ -49,7 +56,7 @@ class DBManager {
 		db_logger.warn(`in get_user_problems: user does not exist: ${user_string}`);
 		return [ 1, ];
 	}
-	async get_user_name(user_string: string) {
+	async get_user_name(user_string: string): Promise<string> {
 		const user = await this.get_user(user_string);
 		if (user !== null) {
 			db_logger.debug(`get_user_name: ${user_string}: ${user.username}`);
@@ -58,7 +65,7 @@ class DBManager {
 		db_logger.warn(`in get_user_name: user does not exist: ${user_string}`);
 		return 'guest';
 	}
-	async get_user_avatar(user_string: string) {
+	async get_user_avatar(user_string: string): Promise<string> {
 		const user = await this.get_user(user_string);
 		if (user !== null) {
 			db_logger.debug(`get_user_avatar: ${user_string}: ${user.avatar_url}`);
@@ -67,7 +74,7 @@ class DBManager {
 		db_logger.warn(`in get_user_avatar: user does not exist: ${user_string}`);
 		return null;
 	}
-	async has_user_problem(user_string: string, problem_num: number) {
+	async has_user_problem(user_string: string, problem_num: number): Promise<boolean> {
 		const user = await this.get_user(user_string);
 		if (user !== null) {
 			db_logger.debug(`has_user_problem: ${user_string} ${problem_num}`);
@@ -76,14 +83,14 @@ class DBManager {
 		db_logger.warn(`in has_user_problem: user does not exist: ${user_string}`);
 		return false;
 	}
-	async add_user_problems(user_string: string, ...problems: number[]) {
+	async add_user_problems(user_string: string, ...problems: number[]): Promise<boolean> {
 		const user = await this.get_user(user_string);
 		if (user === null) {
 			db_logger.warn(`in add_user_problems: user does not exist: ${user_string}`);
 			return false;
 		}
 		db_logger.debug(`add_user_problems: ${user_string} ${problems}`);
-		this.db.updateOne({ '_id': user._id, }, {
+		this.db.updateOne({ '_id': user._id, } as Partial<User>, {
 			'$addToSet': {
 				'problems': { '$each': problems, },
 			},
@@ -92,4 +99,4 @@ class DBManager {
 	}
 }
 
-export { DBManager, };
+export { DBManager, User, };

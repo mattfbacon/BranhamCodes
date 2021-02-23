@@ -18,7 +18,7 @@ const http_logger = pino_http({ 'name': 'http', });
 import express = require('express');
 import mongo = require('mongodb');
 import nunjucks = require('nunjucks');
-import { DBManager, } from './lib/database';
+import { DBManager, User, } from './lib/database';
 import config from './lib/config';
 import { promises as fs, } from 'fs';
 import phin = require('phin');
