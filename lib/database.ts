@@ -19,6 +19,12 @@ declare interface User {
 	user_string: string;
 }
 
+declare interface UserInfo {
+	username: string;
+	url: string;
+}
+
+
 class DBManager {
 	db: mongo.Collection;
 	constructor(db: mongo.Collection) {
@@ -96,6 +102,17 @@ class DBManager {
 			},
 		});
 		return true;
+	}
+	async get_leader_board() {
+		const all_rows = (await this.db.find().toArray()).filter(item => {
+			return item.avatar_url !== null;
+		}).sort((a, b) => {
+			// eslint-disable-next-line no-nested-ternary
+			return a.problems.length < b.problems.length ? -1 : (a.problems.length > b.problems.length ? 1 : 0);
+		}).map(item => ({
+			'url': item.avatar_url, 'username': item.username,
+		}));
+		return all_rows;
 	}
 }
 

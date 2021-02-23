@@ -9,6 +9,7 @@ declare interface ProblemResponse {
 	type: 'correct' | 'incorrect' | 'unevaluated';
 }
 
+
 import cookie_parser = require('cookie-parser');
 import pino = require('pino');
 const logger = pino({ 'name': 'main', });
@@ -57,6 +58,9 @@ const exit_handler = async () => {
 	const _database = _conn.db(DB_NAME).collection('users');
 	const database = new DBManager(_database);
 
+	let leaderboard: Partial<User>[] = await database.get_leader_board();
+
+	console.log(leaderboard);
 	const app = express();
 	app.set('query parser', 'simple'); // https://stackoverflow.com/questions/29960764/what-does-extended-mean-in-express-4-0
 
@@ -75,6 +79,10 @@ const exit_handler = async () => {
 	app.use(express.urlencoded({
 		'extended': true,
 	}));
+
+	app.get('/leaderboard', (req, res) => {
+		res.render('leaderboard', { leaderboard, });
+	});
 
 	app.get('/user_problems', async (req, res) => {
 		if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string')) {
@@ -106,7 +114,7 @@ const exit_handler = async () => {
 			res.send('No problem number provided.');
 			return;
 		}
-		const problem_index = parseInt(req.query.problem as string, 10) - 1; // NaN propagates so NaN - 1 is NaN
+		const problem_index = parseInt(req.query.problem as string, 10) - 1; // naN propagates so NaN - 1 is NaN
 		if (isNaN(problem_index)) { // no problem number provided
 			res.status(400); // bad request
 			res.send('No problem number provided.');
@@ -137,6 +145,7 @@ const exit_handler = async () => {
 		if (answers[problem_index] === answer) {
 			if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string') && await database.has_user_problem(req.cookies.user_string, answer)) { // logged in and can access
 				await database.add_user_problems(req.cookies.user_string, ...graph[problem_index]);
+				leaderboard = await database.get_leader_board();
 			}
 			res.render('problem_response', {
 				'newproblems': Object.prototype.hasOwnProperty.call(req.cookies, 'user_string') ? (void 0) : graph[problem_index],
