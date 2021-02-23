@@ -30,7 +30,7 @@ declare const alchemy: AlchemyType;
 // eslint-disable-next-line require-await
 (async () => {
 	const my_problems: number[] = (typeof Cookies.get('user_string') === 'undefined') ?
-		await JSON.parse(localStorage.getItem('problems') ?? '[1]') // use localStorage if user is not logged in
+		await JSON.parse(localStorage.getItem('problems')) ?? [ 1, ] // use localStorage if user is not logged in
 		: await (await fetch('/user_problems')).json();
 	const my_problems_set = new Set(my_problems);
 	// the problem structure for every problem (visible and not visible)
