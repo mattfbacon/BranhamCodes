@@ -14,7 +14,6 @@ declare interface CookiesType {
 	set(key: string, value: string, options?: CookieOptions): void;
 	remove(key: string, options?: CookieOptions): void;
 }
-declare const Cookies: CookiesType;
 
 (async () => {
 	const user_string = Cookies.get('user_string');
