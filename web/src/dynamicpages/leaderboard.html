@@ -1,14 +1,17 @@
 {% extends 'base.html' %}
 {set title = 'Leaderboard'}
 {% block styles %}
-<link href="/res/style/problem_response.css" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block content %}
 {# ↓ This part will be rendered by the server #}
 {% raw %}
-{% for item in leaderboard %}
-<p>{{item.username}}<p>
-<img src = "{{item.url}}">
+<ol>
+{% for user in leaderboard %}
+<li>
+<img src="{{user.avatar_url}}">
+<span>{{user.username}}</span>
+</li>
 {% endfor %}
+</ol>
 {% endraw %}
 {% endblock %}
