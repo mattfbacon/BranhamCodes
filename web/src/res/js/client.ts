@@ -1,4 +1,20 @@
 'use strict';
+/* global Cookies */
+
+declare interface CookieOptions {
+	expires?: number | Date;
+	path?: string;
+	domain?: string;
+	secure?: boolean;
+	sameSite?: string;
+}
+declare interface CookiesType {
+	get(): Record<string, string>;
+	get(key: string): string | undefined;
+	set(key: string, value: string, options?: CookieOptions): void;
+	remove(key: string, options?: CookieOptions): void;
+}
+declare const Cookies: CookiesType;
 
 declare interface NodeType {
 	root: boolean;
@@ -13,10 +29,9 @@ declare const alchemy: AlchemyType;
 
 // eslint-disable-next-line require-await
 (async () => {
-	let my_problems: number[] = await (await fetch('/user_problems')).json();
-	if (localStorage.getItem('problems')) {
-		my_problems = await JSON.parse(localStorage.getItem('problems'));
-	}
+	const my_problems: number[] = (typeof Cookies.get('user_string') === 'undefined') ?
+		await JSON.parse(localStorage.getItem('problems') ?? '[1]') // use localStorage if user is not logged in
+		: await (await fetch('/user_problems')).json();
 	const my_problems_set = new Set(my_problems);
 	// the problem structure for every problem (visible and not visible)
 	const global_graph: number[][] = await (await fetch('/graph.json')).json(); // index is node number - 1 (so idx 0 = first node)
