@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 {set title = 'Leaderboard'}
 {% block styles %}
+<link href="/res/style/leaderboard.css" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block content %}
 {# ↓ This part will be rendered by the server #}
 {% raw %}
 <ol>
 {% for user in leaderboard %}
-<li>
-<img src="{{user.avatar_url}}">
-<span>{{user.username}}</span>
-</li>
+	<li>
+	<img src="{{user.avatar_url}}">
+	<a href = "https://github.com/{{user.username}}" target="_blank">{{user.username}} - {{user.problems_count}}</a>
+	</li>
 {% endfor %}
 </ol>
 {% endraw %}
