@@ -1,7 +1,19 @@
-ol{
-	padding-left: 1em;
-	padding-top: 2em;
-	img {
-		width: 20px;
+main {
+	padding: 0;
+}
+
+ol {
+	font-size: 2rem;
+	li {
+		padding: 1rem;
+		margin-bottom: 0;
+		&:nth-child(even) {
+			background-color: rgba(0, 0, 0, .04);
+		}
+		img {
+			height: 2ex;
+			transform: translateY(.3ex); // align with text lol
+			border-radius: 50%;
+		}
 	}
 }

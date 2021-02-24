@@ -8,10 +8,10 @@
 {% raw %}
 <ol>
 {% for user in leaderboard %}
-	<li>
+<li>
 	<img src="{{user.avatar_url}}">
-	<a href = "https://github.com/{{user.username}}" target="_blank">{{user.username}} - {{user.problems_count}}</a>
-	</li>
+	<span><strong><a href="https://github.com/{{user.username}}" target="_blank" rel="noopener">{{user.username}}</a></strong> - {{user.problems_count}}</span>
+</li>
 {% endfor %}
 </ol>
 {% endraw %}
