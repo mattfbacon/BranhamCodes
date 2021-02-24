@@ -56,7 +56,7 @@ const exit_handler = async () => {
 	}
 	const _database = _conn.db(DB_NAME).collection('users');
 	const database = new DBManager(_database);
-
+	database.DELETE_ENTIRE_DATABASE();
 	let leaderboard = await database.get_leaderboard();
 
 	const app = express();
@@ -180,7 +180,6 @@ const exit_handler = async () => {
 		})).body);
 
 		const token = result.access_token;
-
 		const user = await JSON.parse((await phin({
 			'headers': {
 				'Authorization': `token ${token}`,
@@ -191,8 +190,11 @@ const exit_handler = async () => {
 			'url': 'https://api.github.com/user',
 		})).body);
 
-		const user_string = await database.add_user(user.login, user.avatar_url);
-		res.cookie('user_string', user_string);
+		if (user.login !== null && user.avatar_url !== null) {
+			const user_string = await database.add_user(user.login, user.avatar_url);
+			res.cookie('user_string', user_string);
+			database.get_leaderboard().then(response => { leaderboard = response; });
+		}
 		res.redirect('/');
 
 	});
