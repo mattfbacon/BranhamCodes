@@ -6,10 +6,11 @@ import { v4 as uuid, } from 'uuid';
 const db_logger = pino({ 'name': 'db', });
 
 declare interface User {
-	_id: any;
+	_id: mongo.ObjectID;
 	username: string;
 	avatar_url: string;
 	problems: number[];
+	problems_count: number;
 	user_string: string;
 }
 
@@ -33,6 +34,7 @@ class DBManager {
 			await this.db.insertOne({
 				'avatar_url': url,
 				'problems': [ 1, ],
+				'problems_count': 0,
 				user_string,
 				username,
 			} as User);
@@ -88,14 +90,16 @@ class DBManager {
 			'$addToSet': {
 				'problems': { '$each': problems, },
 			},
+			'$inc': {
+				'problems_count': 1, // we assume that the user has completed one problem
+			},
 		});
 		return true;
 	}
 	get_leaderboard(): Promise<User[]> {
 		return this.db.aggregate([
 			{ '$match': { 'avatar_url': { '$ne': null, }, }, }, // make sure avatar_url is not null
-			{ '$addFields': { 'problems_count': { '$size': { '$ifNull': [ '$problems', [], ], }, }, }, }, // add a field that counts the number of problems
-			{ '$sort': { 'problems_count': -1, }, }, // sort descending by that field
+			{ '$sort': { 'problems_count': -1, }, }, // sort descending by the number of problems (i.e., highest first)
 		]).toArray(); // toArray returns a Promise
 	}
 }
