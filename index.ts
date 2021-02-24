@@ -56,7 +56,6 @@ const exit_handler = async () => {
 	}
 	const _database = _conn.db(DB_NAME).collection('users');
 	const database = new DBManager(_database);
-	database.DELETE_ENTIRE_DATABASE();
 	let leaderboard = await database.get_leaderboard();
 
 	const app = express();
