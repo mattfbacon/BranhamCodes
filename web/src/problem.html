@@ -11,9 +11,7 @@
 <h2 id="examples">Example{% if examples.length > 1%}s{% endif %}</h2>
 {% for input, output in examples %}
 <h4 id="input-{{loop.index}}">Input</h4>
-{% for line in input%}
-<pre><code>{{line}}</code></pre>
-{% endfor %}
+<pre><code>{{input | join('\n') }}</code></pre>
 <h4 id="output-{{loop.index}}">Output</h4>
 <pre><code>{{output}}</code></pre>
 {% endfor %}
