@@ -1,0 +1,11 @@
+{% extends 'problem.html' %}
+{% set name = 'Divisibility' %}
+{% set num = 2 %}
+{% set author = 'Oleksandr G.' %}
+{% set examples = [[['2', '7', '14'], '2'], [['3', '21','6', '2'], '1']] %}
+{% block problem %}
+You have n doors in front of you each labeled with a number and a sign above all of them. The sign says "pick the door with a number which is divisible by 7".
+So you wonder, how many possible doors could you choose?
+You will recieve a list of numbers. The first number n, (n = 10000), will tell you how many numbers are in that list. The next n lines each cotain a random number
+in the range [0, 1000]. Please find how many of these numbers are divisible by 7
+{% endblock %}
