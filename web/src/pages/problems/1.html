@@ -1,8 +1,15 @@
 {% extends 'problem.html' %}
-{% set name = 'Test Problem' %}
+{% set name = 'Introduction' %}
 {% set num = 1 %}
-{% set author = 'Matt F.' %}
-{% set examples = [['1', '1'], ['2', '2']] %}
+{% set author = 'Eric L., Oleksandr G., Matt F, and Ashish J.' %}
+{% set examples = [[['1', '5'], '5'], [['3', '2','6', '2'], '10']] %}
 {% block problem %}
-This is a test problem to see if the template works.
+Welcome to <em>The Trials of Bits and Bytes</em>, a choose your own adventure game full of programming puzzles to help sharpen your skills.
+Work your way through problems, with branching paths determining which action you perform.
+Inspired by <em>Advent of Code</em>, the problems in TTBB don’t require deep programming knowledge.
+You can approach questions from any angle and even brute force the questions without even touching code,
+but each problem is guarenteed to have a programmable solution that can run in under 5 seconds.
+To start your adventure here is your first task.
+You will recieve a list of numbers. The first number n, will tell you how many numbers are in that list. The next n lines each cotain a random number
+in the range [0, 1000]. Please find the sum of all these numbers.
 {% endblock %}
