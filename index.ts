@@ -38,6 +38,12 @@ const exit_handler = async () => {
 	}
 };
 
+const submission_timeout_users = new Set<string>();
+
+setInterval(() => {
+	submission_timeout_users.clear();
+}, 1000 * 60);
+
 (async () => {
 	const graph: number[][] = JSON.parse(await fs.readFile('web/dist/static/graph.json', 'utf-8') as string);
 	const answers: number[] = JSON.parse(await fs.readFile('answers.json', 'utf-8') as string);
@@ -141,6 +147,11 @@ const exit_handler = async () => {
 		const answer = parseInt(req.body.textsubmission as string, 10);
 		if (answers[problem_index] === answer) {
 			if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string') && await database.has_user_problem(req.cookies.user_string, answer)) { // logged in and can access
+				if (submission_timeout_users.has(req.cookies.user_string)) {
+					res.send('You have submitted recently and are on a timeout. Please try again in one minute.');
+					return;
+				}
+				submission_timeout_users.add(req.cookies.user_string);
 				await database.add_user_problems(req.cookies.user_string, ...graph[problem_index]);
 				database.get_leaderboard().then(result => { leaderboard = result; }); // does not need to be awaited
 			}
