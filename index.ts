@@ -47,7 +47,7 @@ setInterval(() => {
 (async () => {
 	const graph: number[][] = JSON.parse(await fs.readFile('web/dist/static/graph.json', 'utf-8') as string);
 	const answers: number[] = JSON.parse(await fs.readFile('answers.json', 'utf-8') as string);
-
+	const after_words: string[] = JSON.parse(await fs.readFile('afterwords.json', 'utf-8') as string);
 	_conn = new mongo.MongoClient(DB_URL);
 	try {
 		await _conn.connect();
@@ -156,6 +156,7 @@ setInterval(() => {
 				database.get_leaderboard().then(result => { leaderboard = result; }); // does not need to be awaited
 			}
 			res.render('problem_response', {
+				'afterword': after_words[problem_index],
 				'newproblems': Object.prototype.hasOwnProperty.call(req.cookies, 'user_string') ? (void 0) : graph[problem_index],
 				'num': problem_index + 1,
 				'result': 'You got it right!',

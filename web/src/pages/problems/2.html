@@ -1,11 +1,29 @@
 {% extends 'problem.html' %}
-{% set name = 'Divisibility' %}
+{% set name = 'Junkyard' %}
 {% set num = 2 %}
-{% set author = 'Oleksandr G.' %}
-{% set examples = [[['2', '7', '14'], '2'], [['3', '21','6', '2'], '1']] %}
+{% set author = 'Eric L.' %}
+{% set examples = [[['2', '5', '10'], '10'], [['7', '1','2', '4', '9', '3', '5', '3'], '180']] %}
 {% block problem %}
-You have n doors in front of you each labeled with a number and a sign above all of them. The sign says "pick the door with a number which is divisible by 7".
-So you wonder, how many possible doors could you choose?
-You will recieve a list of numbers. The first number n, (n = 10000), will tell you how many numbers are in that list. The next n lines each cotain a random number
-in the range [0, 1000]. Please find how many of these numbers are divisible by 7
+After a brief moment of consideration, Mason knew that one of the only places he would be safe would be to hide in the junkyard.
+He slowly made his way to the junkyard, being careful to avoid anyone in sight, but just as he approched the gates of the junkyard,
+he realized the searchlights that were surrounding the place.  They must have known that the wanted victims would try and hide in one
+of the most isolated place in Omni.
+<br>
+However, Mason realized that there was a very obvious pattern that these search lights followed, and if he could climb over the gates when all
+the searchlights are focused on a single point, then no one will be able to see him climb the fence.
+<br>
+After further observation, Mason noted that each of the N searchlights (1 ≤ N ≤ 30) takes a whole number of minutes to circle around the junkyard, all
+eventually highlightig the gates, meaning he would need to cross the fence when they all concentrate on the gate.
+<br>
+However, Mason just barely missed the time frame for the first time the lights are all focused on the gates.  Help Mason determine
+how long he would have to wait until his next shot at climbing the gates.
+<br>
+INPUT:
+<br>
+The first line of input contains the integer N.  The next N lines each describe how long a searchlight takes to complete a cycle.
+<br>
+OUTPUT:
+<br>
+Enter the minimum time Mason will have to wait until all the lights are focused on the gates again, in minutes.
+<br>
 {% endblock %}

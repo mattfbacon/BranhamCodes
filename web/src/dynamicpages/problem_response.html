@@ -10,6 +10,7 @@
 <h4 style="margin-top: 0;"><span class="result_{{type | lower}}">{{type | capitalize}}:&nbsp;</span>{{result}}</h4>
 <hr>
 <p>Your submission was <code>{{submissiontext}}</code> which was {% if isNaN(submission) %}unable to be parsed{% else %}parsed as <code>{{submission}}</code>{% endif %}.</p>
+<p>{{afterword}}</p>
 {% endraw %}
 {% endblock %}
 {% block scripts %}
