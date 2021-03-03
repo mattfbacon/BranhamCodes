@@ -86,14 +86,18 @@ class DBManager {
 			return false;
 		}
 		db_logger.debug(`add_user_problems: ${user_string} ${problems}`);
-		this.db.updateOne({ '_id': user._id, } as Partial<User>, {
-			'$addToSet': {
-				'problems': { '$each': problems, },
-			},
-			'$inc': {
-				'problems_count': 1, // we assume that the user has completed one problem
-			},
-		});
+		for (const problem of problems) {
+			if (!user.problems.includes(problem)) {
+				this.db.updateOne({ '_id': user._id, } as Partial<User>, {
+					'$addToSet': {
+						'problems': { problem, },
+					},
+					'$inc': {
+						'problems_count': 1, // we assume that the user has completed one problem
+					},
+				});
+			}
+		}
 		return true;
 	}
 	get_leaderboard(): Promise<User[]> {
