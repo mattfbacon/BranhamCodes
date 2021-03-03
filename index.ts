@@ -169,7 +169,7 @@ setInterval(() => {
 		// the answer was wrong.
 		res.render('problem_response', {
 			'num': problem_index + 1,
-			'result': `Too ${answer > answers[problem_index] ? 'big' : 'small'}.`,
+			'result': 'That answer is incorrect. Please try again.',
 			'submission': answer,
 			'submissiontext': req.body.textsubmission,
 			'type': 'incorrect',
