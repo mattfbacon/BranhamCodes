@@ -96,7 +96,16 @@ setInterval(() => {
 
 	app.get('/user_info', async (req, res) => {
 		if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string')) {
-			res.send({ 'avatar_url': await database.get_user_avatar(req.cookies.user_string), 'username': await database.get_user_name(req.cookies.user_string), });
+			if (!await database.user_exists(req.cookies.user_string)) {
+				res.clearCookie('user_string'); // stale user string
+				res.end(); // this is in a window.fetch so the user will need to try again
+				return;
+			}
+			const [ avatar_url, username, ] = await Promise.all([
+				database.get_user_avatar(req.cookies.user_string),
+				database.get_user_name(req.cookies.user_string),
+			]);
+			res.send({ avatar_url, username, });
 		} else {
 			res.send({ 'avatar_url': null, 'username': null, });
 		}

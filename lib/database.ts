@@ -27,6 +27,9 @@ class DBManager {
 		db_logger.debug(`get_user: ${user_string}`);
 		return this.db.findOne({ user_string, });
 	}
+	async user_exists(user_string: string): Promise<boolean> {
+		return (await this.db.findOne({ user_string, })) !== null;
+	}
 	async add_user(username: string, url: string): Promise<string> {
 		const user = await this.db.findOne({ username, } as Partial<User>);
 		if (user === null) {
