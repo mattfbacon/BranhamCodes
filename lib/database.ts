@@ -10,6 +10,7 @@ declare interface User {
 	username: string;
 	avatar_url: string;
 	problems: number[];
+	solved_problems: number[];
 	problems_count: number;
 	user_string: string;
 }
@@ -35,6 +36,7 @@ class DBManager {
 				'avatar_url': url,
 				'problems': [ 1, ],
 				'problems_count': 0,
+				'solved_problems': [],
 				user_string,
 				username,
 			} as User);
@@ -86,20 +88,33 @@ class DBManager {
 			return false;
 		}
 		db_logger.debug(`add_user_problems: ${user_string} ${problems}`);
-		for (const problem of problems) {
-			if (!user.problems.includes(problem)) {
-				this.db.updateOne({ '_id': user._id, } as Partial<User>, {
-					'$addToSet': {
-						'problems': { problem, },
-					},
-					'$inc': {
-						'problems_count': 1, // we assume that the user has completed one problem
-					},
-				});
-			}
-		}
+		this.db.updateOne({ '_id': user._id, } as Partial<User>, {
+			'$addToSet': {
+				'problems': { '$each': problems, },
+			},
+		});
 		return true;
 	}
+	async add_solved_user_problem(user_string: string, problem: number): Promise<boolean> {
+		const user = await this.get_user(user_string);
+		if (user === null) {
+			db_logger.warn(`in add_user_problems: user does not exist: ${user_string}`);
+			return false;
+		}
+		if (!user.solved_problems.includes(problem)) {
+			this.db.updateOne({ '_id': user._id, } as Partial<User>, {
+				'$addToSet': {
+					'solved_problems': problem,
+				},
+				'$inc': {
+					'problems_count': 1,
+				},
+			});
+		}
+
+		return true;
+	}
+
 	get_leaderboard(): Promise<User[]> {
 		return this.db.aggregate([
 			{ '$match': { 'avatar_url': { '$ne': null, }, }, }, // make sure avatar_url is not null

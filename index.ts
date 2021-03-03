@@ -63,7 +63,6 @@ setInterval(() => {
 	const _database = _conn.db(DB_NAME).collection('users');
 	const database = new DBManager(_database);
 	let leaderboard = await database.get_leaderboard();
-
 	const app = express();
 	app.set('query parser', 'simple'); // https://stackoverflow.com/questions/29960764/what-does-extended-mean-in-express-4-0
 
@@ -152,6 +151,7 @@ setInterval(() => {
 					return;
 				}
 				submission_timeout_users.add(req.cookies.user_string);
+				await database.add_solved_user_problem(req.cookies.user_string, problem_index + 1);
 				await database.add_user_problems(req.cookies.user_string, ...graph[problem_index]);
 				database.get_leaderboard().then(result => { leaderboard = result; }); // does not need to be awaited
 			}
