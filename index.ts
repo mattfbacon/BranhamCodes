@@ -146,7 +146,7 @@ setInterval(() => {
 		}
 		const answer = parseInt(req.body.textsubmission as string, 10);
 		if (answers[problem_index] === answer) {
-			if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string') && await database.has_user_problem(req.cookies.user_string, answer)) { // logged in and can access
+			if (Object.prototype.hasOwnProperty.call(req.cookies, 'user_string') && await database.has_user_problem(req.cookies.user_string, problem_index + 1)) { // logged in and can access
 				if (submission_timeout_users.has(req.cookies.user_string)) {
 					res.send('You have submitted recently and are on a timeout. Please try again in one minute.');
 					return;
