@@ -24,6 +24,8 @@ declare interface CookiesType {
 			document.getElementById('username').innerText = user_info.username;
 			document.getElementById('avatar').setAttribute('src', user_info.avatar_url);
 			document.getElementById('user_info').style.width = '';
+		} else {
+			window.location.href = '/login';
 		}
 	}
 })().catch((reason) => {
