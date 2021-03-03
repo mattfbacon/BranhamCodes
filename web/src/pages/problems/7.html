@@ -5,15 +5,15 @@
 {% set examples = [[['5 6', '####*#', '####*#', '##***#', '##*#*#', '#**#*#', '#*##*#'], '6'], [['10 10', '#*#*#####*','#***#####*', '###*******', '###*###*##', '****###*##', '*##*#*#*##', '**********', '#*###*##**', '#*##******', '#*##*####*'], '12']] %}
 {% block problem %}
 Mason decides that the only way to stop the Digital Eradication Act is to try and stop it himself at the Capitol, although doing so will be no easy feat. Taking the previously found path, Mason wades through the foul sewer water to make his way towards the building.
-<br>
+<br><br>
 This journey will take many hours due to how large Omni really was, which gives Mason a lot of time to think about how he might be able to abolish the new act. A single person like Mason would prove futile to the burly guardsmen or traps sure to be set up in the untrusting dictator's building, so he would definitely need to enlist the help of other citizens. However doing so is not trivial since Mason is now a wanted criminal.
-<br>
+<br><br>
 After a bit more thought, Mason realizes that if he had enough bits, he could potentially bribe the desperate citizens to aid him in his actions.  With enough manpower, Mason would surely be able to overthrow the government and clear the names of all other programmers. The main challenge is then to sneak into the banking system and try to retrieve the bits.
-<br>
+<br><br>
 Finally, Mason sees the opening for the Capitol, with the bank being directly located to the left of it. Upon getting a closer inspection of the place, Mason concludes that the bank is a heavily fortified building guarded by thick metal vault doors and dozens of armored guards. This means that entering through the worn-down roof would be his best bet.
-<br>
+<br><br>
 To scale the building, Mason needs to both avoid the security cameras and also find a way up. The first issue can be solved by using a directed EMP to break down the cameras, and Mason found that the building adjacent to the bank has pipes that can be climbed to gain access to the roof. After getting to the roof of that building, Mason can simply jump to the bank's roof.
-<br>
+<br><br>
 This face of the building, which is <i>W</i> (1 ≤ <i>W</i> ≤ 100) feet by <i>H</i> (1 ≤ H ≤ 100) feet.  Asterisks (*) represent parts of the wall that Mason can climb and hash marks (#)
 represent empty wall. For example, a 5-by-6 foot wall can be depicted as follows:
 <pre>
@@ -26,16 +26,16 @@ represent empty wall. For example, a 5-by-6 foot wall can be depicted as follows
 </pre>
 The two paths that Mason can take in this scenario are starting from the second point or the fourth point. The former path would take 9 feet to climb, whereas
 the latter path is just a vertical pipe and is only 6 feet long.
-<br>
+<br><br>
 Every second he spends on the walls is a second that Mason might get caught, so help Mason find the minimum path length up the wall.
-<br>
+<br><br>
 INPUT:
 <br>
 The first line contains integers <i>W</i> and <i>H</i> representing the building's width and height. The next <i>H</i> lines each contain <i>W</i> symbols
 depicting whether that part of the wall is empty or contains a pipe.
-<br>
+<br><br>
 OUTPUT:
 <br>
 Please enter the minimum distance Mason has to travel to climb to the top of the building.
-<br>
+<br><br>
 {% endblock %}
