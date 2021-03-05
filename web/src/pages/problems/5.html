@@ -1,0 +1,62 @@
+{% extends 'problem.html' %}
+{% set name = 'The Omniscient Guild' %}
+{% set num = 5 %}
+{% set author = 'Eric L.' %}
+{% set examples = [[['3 5', '1 3', '5 8', '3 4', '9 10', '6 9'], '9'], [['4 10', '1 7', '6 8', '9 13', '5 12', '9 10', '12 17', '14 20', '18 19', '3 20', '19 20'], '19']] %}
+{% block problem %}
+Now that he was safe inside the junkyard, Mason was given the opportunity to truly think about how he would deal with the DEA.
+<br>
+Even though the government is persecuting all with knowledge of programming, Mason knew that the Omni Republic must still utilize computers.  Human computational
+power and labor is no where near a computing device's capabilities.  The government still needed to keep tabs on its citizens, and physical data would just be too
+wasteful.  However, using computers also exposes weaknesses that Mason might be able to utilize to his advantages, because even after a century of tweaking,
+computers still aren't perfect.  Mason would just need to figure out how to do so.
+<br>
+Just as Mason was thinking about how to approach this issue, he heard a rustling behind him, yet he only saw the scraps of metal behind him without any signs
+of life.  Suddenly, he heard a voice behind him.
+<br>
+"What brings you to the Omniscient Guild, Mason?"
+<br>
+Startled, Mason tried to see who spoke the words but his vision quickly cut to black.  A while later, Mason groggily awoke to the sound of two strangers arguiing,
+<br>
+"Don't you understand?  If we turn this brat in, we become rich, enough bits to survive off for years!  Foraging for food would be a thing of the past, and we
+can live amongst the Omni Elites!"  It was a teenage boy with long blonde hair and blue eyes speaking.
+<br>
+"You're thinking about 20,000 bits for one person, 10,000 each between us two.  There are dozens of members in the Guild.  Do you suggest we take the money for
+ourselves and leave the other members in the dust of poverty, seeking revenge on their own brethren who didn't offer to even share the earnings?  The same
+people who accepted us and allowed us to live amongst them when we had no home?  Besides, even if we do bail, there's no guarenteed that we will be offered
+the bits or immunity from the government.  You musn't forget that we too are wanted."  The second stranger was a girl at around the same age with long black
+hair and brown eyes.
+<br>
+Just as the boy was about to retaliate, the girl realized that Mason had woken up and quickly interupted him, much to the boy's annoyance.
+<br>
+"Would you look at that!  The intruder has woken up!  Look, we realize that the Digital Eradication act has probably left you in shambles, but this doesn't
+grant you access to wherever you would want to go, such as our home.  As such, we believe that you should receive a punishment!  In addition to keeping the
+items from your bag, which we truly want to thank you for delivering us rations and other useful items, we have prepared a trial for you.  If you fail to
+accomplish the task."
+<br>
+"And if you don't complete the task, let's just say we won't be living in the slums anymore," the boy chimed in.
+<br>
+The girl gave the boy a dirty look before continuing.  "We know that you must be fluent with math, which is a trait that very few possess, so we would like
+to test your capabilities with a puzzle we've been stuck on.  Solving the problem proves to us that you hold value, which we may recruit you, but failing to
+do so, like so many before you, will, like Finn said, will end in a less than favorable outcome.  So, are you up for the challenge?"
+<br>
+Mason knew he wouldn't go down without a fight, so he simply nodded his head.
+<br>
+"Great!" the girl continued.  "Well, you see, we recently were able to inflitrate into the Omni Republic Capitol.  Currently, we have our members take shifts
+and perform different operations from inside the Capitol walls, but we are limited to only a single person inside.  Becoming a trusted official takes months
+of work and we got very lucky with our recruit.  Anyways, there are a N tasks that this spy needs to accomplish every day (1 ≤ N ≤ 100), but we want him
+to be able to finish his shift as soon as possible so he can start exporting data about the Omni Republic as soon as possible.  Do you think you can help us
+solve this issue?"
+<br>
+Help Mason find the earliest time the spy can finish his N tasks out of M ( 1 ≤ M ≤ 4000) total tasks.
+<br>
+INPUT:
+<br>
+The first line will contain integers N and M.  The next M lines each contain integers A and B (0 ≤ A ≤ B ≤ 10000) which describe the start and end of the
+task's shift, respectively (Decades later, the time system has drastically changed to have 5000 minute each day).
+<br>
+OUTPUT:
+<br>
+Enter the earliest time, in minutes, that the spy can finish his tasks.
+<br>
+{% endblock %}
