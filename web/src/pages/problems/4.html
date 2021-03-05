@@ -5,15 +5,15 @@
 {% set examples = [[['5 4', '2 1', '5 4', '3 5', '3 4'], '2'], [['8 10', '1 2','4 2', '2 8', '8 4', '3 6', '6 7', '3 7', '5 3', '7 5', '5 6'], '14']] %}
 {% block problem %}
 After some brief evaluation, Mason decides that hiding in the sewers will be very beneficial. It allows him to access all the major locations in Omni and provide protection from the mob that's hunting for his head. The average citizen of Omni is dirt poor, barely being able to afford the common necessities of life, such as food and water. They have to resort to building homes out of scrap and wearing the ragged, tattered clothes of the wealthy upper-class, so 20,000 bits, even when split upon a group of 25 people, would still mean the world to them.
-<br>
+<br><br>
 As Mason fell deep into thought, the clanging of trash lids brought Mason's attention back to his current situation, and Mason quickly scurried out of sight from the people behind him. Although the sewer gates were designed with a sophisticated lock mechanism, the design was Mason's dad's invention, so he was familiar with the inner workings of the lock and easily bypassed it, entering the sewers.
-<br>
+<br><br>
 The sewer tunnels reeked of rotten food and molding bags of trash. Grayish water rose above the knees, making it very difficult
 to traverse the systems, but Mason continued anyway, knowing that there was no looking back.
-<br>
+<br><br>
 The sewer system consists of a total of <i>N</i> locations (1 ≤ <i>N</i> ≤ 100), which are known to be labeled from 1 to <i>N</i>.  There are <i>M</i> sewer tunnels that connect each
 location with others and these sewer tunnels can be traversed both ways.
-<br>
+<br><br>
 For example, in a sewer system with five locations and four connections between 1 and 2; 3 and 4; 4 and 5; and 3 and 5, the sewage system might look like the
 following graph:
 <pre>
@@ -24,14 +24,14 @@ following graph:
 </pre>
 Mason is currently at location 1 and must consider which locations he can get to from his current path. In this example, the only location Mason can reach
 is location 2. Help Mason determine which locations are possible to travel to through these sewer tunnels.
-<br>
+<br><br>
 INPUT:
 <br>
 The first line contains two integers <i>N</i> and <i>M</i>. The next <i>M</i> lines each contain two integers <i>a</i> and <i>b</i> which describe a sewer tunnel connection between locations
 <i>a</i> and <i>b</i>.
-<br>
+<br><br>
 OUTPUT:
 <br>
 Enter the number of possible locations Mason can reach, excluding his current location at 1.
-<br>
+<br><br>
 {% endblock %}
