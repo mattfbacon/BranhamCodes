@@ -27,15 +27,33 @@ declare interface AlchemyType {
 }
 declare const alchemy: AlchemyType;
 
-// eslint-disable-next-line require-await
+const get_problem_data = async (): Promise<number[][]> => {
+	if (typeof Cookies.get('user_string') === 'undefined') {
+		const problem_data = JSON.parse(localStorage.getItem('problems'));
+		if (
+			problem_data === null
+			|| !Array.isArray(problem_data)
+			|| problem_data.length !== 2
+			|| !Array.isArray(problem_data[0])
+			|| !Array.isArray(problem_data[1])
+		) {
+			// problem data is invalid
+			localStorage.removeItem('problems');
+			return [ [ 1, ], [], ];
+		}
+		return problem_data;
+	}
+	return fetch('/user_problems').then(data => data.json());
+};
+
 (async () => {
-	const my_problems: number[] = (typeof Cookies.get('user_string') === 'undefined') ?
-		await JSON.parse(localStorage.getItem('problems')) ?? [ 1, ] // use localStorage if user is not logged in
-		: await (await fetch('/user_problems')).json();
+	const [ [ my_problems, my_solved_problems, ], global_graph, ]: [number[][], number[][]] = await Promise.all([
+		get_problem_data(),
+		fetch('/graph.json').then(data => data.json()),
+	]);
 	const my_problems_set = new Set(my_problems);
-	// the problem structure for every problem (visible and not visible)
-	const global_graph: number[][] = await (await fetch('/graph.json')).json(); // index is node number - 1 (so idx 0 = first node)
-	const my_graph: (number | undefined)[][] = [];
+	const my_solved_problems_set = new Set(my_solved_problems);
+	const my_graph: number[][] = [];
 	for (const problem of my_problems) {
 		my_graph[problem - 1] = global_graph[problem - 1].filter(Set.prototype.has, my_problems_set); // index is 1 less than problem number
 	}
@@ -102,7 +120,7 @@ declare const alchemy: AlchemyType;
 					'id': problem_idx + 1,
 					'name': problem_idx + 1,
 					'root': !problem_idx, // node_idx === 0
-					'type': problem_s_children.length ? 'solved' : 'unsolved', // if there are children, it's solved
+					'type': my_solved_problems_set.has(problem_idx + 1) ? 'solved' : 'unsolved', // if there are children, it's solved
 				});
 			}
 			return acc;
