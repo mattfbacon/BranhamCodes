@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% set title = '' %}
+{% block styles %}
+<link rel="stylesheet" href="/res/style/projects.css" text="text/css">
+{% endblock %}
+{% block content %}
+<div class = "main">
+	<div class="row">
+		<div class="column">
+			<div class = "content">
+				<img src="sudoku.svg" style="height: min(25rem, max(33vh, 10rem));"/>
+				<h5>Sudoku Solver</h5>
+				<p>A sudoku solver that takes in an input of 9 by 9 integers and returns the solved puzzle. Uses DFS and a stack. Made by Oleksandr Gorpynich. <a href="https://github.com/OlexG/Sudoku-Solver" target = "_blank">Link</a></p>
+			</div>
+		</div>
+		<div class="column">
+			<div class = "content">
+				<img src="tetris.PNG" style="height: min(25rem, max(33vh, 10rem));"/>
+				<h5>Tetris</h5>
+				<p>Tetris in Elm: Making Tetris using the Elm framework and SVGs. Made by Matt Fellenz. <a href="https://mattfellenz.be/tetris/" target = "_blank">Link</a></p>
+			</div>
+		</div>
+		<div class="column">
+			<div class = "content">
+				<img src="default.jpg" style="height: min(25rem, max(33vh, 10rem));"/>
+				<h5>JavaStocksInfo</h5>
+				<p>Takes Marketwatch stock data and displays it on the chosen 1-15 tickers, using the HTML of the website. Live data only works when the market is open. No APIs. Made by Matan Kedar. <a href="https://github.com/mkedar/javaStocksInfo" target = "_blank">Link</a></p>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

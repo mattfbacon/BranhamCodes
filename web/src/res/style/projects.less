@@ -1,0 +1,57 @@
+body {
+	background-color: #f1f1f1;
+	font-family: Arial;
+}
+
+
+.main {
+	max-width: 1000px;
+	margin: auto;
+}
+
+.row {
+	margin: 8px -16px;
+}
+
+
+.row,
+.row > .column {
+	padding: 8px;
+}
+
+.column {
+	float: left;
+	width: 25%;
+}
+
+img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+
+.content {
+	background-color: white;
+	padding: 10px;
+	min-height: 49rem;
+}
+
+ @media screen and (max-width: 900px) {
+	.column {
+		width: 50%;
+	}
+}
+
+
+@media screen and (max-width: 600px) {
+	.column {
+		width: 100%;
+	}
+}
