@@ -48,14 +48,14 @@ class DBManager {
 		db_logger.warn(`in add_user: user already exists: ${username}`);
 		return user.user_string;
 	}
-	async get_user_problems(user_string: string): Promise<number[]> {
+	async get_user_problems(user_string: string): Promise<[ number[], number[], ]> {
 		const user = await this.get_user(user_string);
 		if (user !== null) {
 			db_logger.debug(`get_user_problems: ${user_string}: ${user.problems}`);
-			return user.problems;
+			return [ user.problems, user.solved_problems, ];
 		}
 		db_logger.warn(`in get_user_problems: user does not exist: ${user_string}`);
-		return [ 1, ];
+		return [ [ 1, ], [], ];
 	}
 	async get_user_name(user_string: string): Promise<string> {
 		const user = await this.get_user(user_string);

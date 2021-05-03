@@ -17,10 +17,11 @@
 {% raw %}
 {% if newproblems %}
 <script>
-	let problems = JSON.parse(localStorage.getItem('problems'));
-	problems = new Set(problems === null ? [ 1, ] : problems);
+	let [ problems, solved_problems, ] = JSON.parse(localStorage.getItem('problems')) ?? [ [ 1, ], [], ];
+	problems = new Set(problems); solved_problems = new Set(solved_problems);
 	[{{newproblems}}].forEach(problem => problems.add(problem));
-	localStorage.setItem('problems', JSON.stringify([...problems]));
+	solved_problems.add({{num}});
+	localStorage.setItem('problems', JSON.stringify([ [...problems], [...solved_problems], ]));
 </script>
 {% endif %}
 {% endraw %}
