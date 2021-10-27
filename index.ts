@@ -23,8 +23,7 @@ import config from './lib/config';
 import { promises as fs, } from 'fs';
 import phin = require('phin');
 
-const DB_URL = 'mongodb://localhost:27017';
-const DB_NAME = 'branhamcodes';
+const {DB_URL, DB_NAME} = config;
 
 let _conn: mongo.MongoClient;
 
